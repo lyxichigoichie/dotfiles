@@ -184,29 +184,7 @@ def apply_wezterm_configuration():
             print(f"字体安装过程中发生错误: {e}")
 
     # 5. 克隆 Wezterm 配置
-    if shutil.which("git"):
-        print("\n正在克隆 wezterm-config 配置文件...")
-        repo_url = "https://github.com/lyxichigoichie/wezterm-config.git"
-        config_dir = Path.home() / ".config" / "wezterm"
-        
-        try:
-            if config_dir.exists():
-                print(f"警告: 发现已存在的配置目录 '{config_dir}'。")
-                backup_dir = config_dir.with_suffix(".bak")
-                if backup_dir.exists():
-                    shutil.rmtree(backup_dir)
-                shutil.move(str(config_dir), str(backup_dir))
-                print(f"已将其备份到 '{backup_dir}'。")
-            
-            subprocess.run(["git", "clone", repo_url, str(config_dir)], check=True)
-            print("配置文件克隆成功！")
-        except Exception as e:
-            print(f"克隆配置文件时发生错误: {e}")
-    else:
-        print("\n警告: 未找到 'git' 命令，跳过配置文件克隆。")
-    
-    print("\n--- WezTerm 配置完成 ---")
-    print("请重启您的 WezTerm 实例以使所有更改生效。")
+    subprocess.run(['ln', '-sfn', Path(__file__).parent.absolute().__str__(), '~/.config/wezterm'])
 
 if __name__ == "__main__":
     os_name, os_version, arch = get_system_info()
