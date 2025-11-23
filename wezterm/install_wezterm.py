@@ -214,14 +214,16 @@ if __name__ == "__main__":
     if not arch:
         print(f"错误: 无法识别您的系统架构 ({platform.machine()})。")
         sys.exit(1)
-
-    url = find_download_url(os_name, os_version, arch, wezterm_package_urls)
-
-    if not url:
-        print("抱歉，在列表中没有找到适合您系统的 WezTerm 软件包。")
-        sys.exit(1)
-
-    install_successful = download_and_install(url)
+    
+    if os_name == 'Arch':
+        subprocess.run(["sudo", "pacman", "-S", f"wezterm"], check=True)
+        install_successful = True
+    else:
+        url = find_download_url(os_name, os_version, arch, wezterm_package_urls)
+        if not url:
+            print("抱歉，在列表中没有找到适合您系统的 WezTerm 软件包。")
+            sys.exit(1)
+            install_successful = download_and_install(url)
     
     if install_successful:
         try:
