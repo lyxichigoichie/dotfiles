@@ -1,6 +1,6 @@
 #! /usr/bin/bash
 
-SCRIPT_DIR=$(dirname "$0")
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 
 rm ~/.config/Code/User/settings.json
 rm ~/.config/Code/User/keybindings.json
