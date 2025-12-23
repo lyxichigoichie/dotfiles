@@ -1,0 +1,27 @@
+[Unit]
+Description=Frp Client Service
+# 这一点很关键：确保网络连接建立后再启动，否则frp会报错连接失败
+After=network.target network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+# 为了安全，不要用 root 运行，除非你需要绑定 1024 以下的端口
+User=liyx
+Group=liyx
+
+# 关键设置：启动失败后自动重启，适合网络波动的情况
+Restart=on-failure
+RestartSec=5s
+
+# 这里的路径必须是绝对路径！
+ExecStart=/home/liyx/3rdparty/dotfiles/frp/frpc -c /home/liyx/3rdparty/dotfiles/frp/frpc.toml
+
+# 如果你的 frpc 依赖工作目录（例如读取同级目录下的其他文件），可以加上这一行
+WorkingDirectory=/home/liyx/3rdparty/dotfiles/frp
+
+# 这里的设置可以禁止 frp 修改系统文件，增加安全性（可选）
+ProtectSystem=full
+
+[Install]
+WantedBy=multi-user.target
