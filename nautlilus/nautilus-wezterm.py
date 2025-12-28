@@ -1,32 +1,62 @@
-#!/usr/bin/env python
-
-import gi
-gi.require_version('Nautilus', '3.0')
-from gi.repository import Nautilus, GObject
+#!/usr/bin/env python3
 import os
-
-class OpenWezTerm(GObject.GObject, Nautilus.MenuProvider):
-    def __init__(self):
-        self.file_names = []
-
-
-    def menu_activate_cb(self, menu, file):
-        """Called when the user selects the menu."""
-        try:
-            path = file.get_location().get_path()
-            os.system("wezterm start --cwd='{0}'".format(path))
-        except AttributeError: # it is a list of elements
-            dir_list = [f.get_location().get_path() for f in file if f.is_directory()]
-            os.system("wezterm --command='echo -e \"Something went wrong. Send an issue on git with what you attempted\nPath = {0}\" && bash || bash'".format(dir_list[0]))
+from urllib.parse import unquote
+from gi.repository import Nautilus, GObject
+from typing import List
 
 
-    def define_menu_helper(self, name, window, file):
-        item = Nautilus.MenuItem(name="OpenWezTerm::" + name,
-                                 label="Open in Wezterm" ,
-                                 tip="Opens current directory in WezTerm",
-                                 icon="nautilus-wezterm")
-        item.connect('activate', self.menu_activate_cb, file)
-        return item,
+class OpenWezTermExtension(GObject.GObject, Nautilus.MenuProvider):
+    def _open_wezterm(self, file: Nautilus.FileInfo) -> None:
+        filename = unquote(file.get_uri()[7:])
 
-    def get_background_items(self, window, file):
-        return self.define_menu_helper("Background", window, file)
+        os.chdir(filename)
+        os.system("wezterm .")
+
+    def menu_activate_cb(
+        self,
+        menu: Nautilus.MenuItem,
+        file: Nautilus.FileInfo,
+    ) -> None:
+        self._open_wezterm(file)
+
+    def menu_background_activate_cb(
+        self,
+        menu: Nautilus.MenuItem,
+        file: Nautilus.FileInfo,
+    ) -> None:
+        self._open_wezterm(file)
+
+    def get_file_items(
+        self,
+        files: List[Nautilus.FileInfo],
+    ) -> List[Nautilus.MenuItem]:
+        if len(files) != 1:
+            return []
+
+        file = files[0]
+        if not file.is_directory() or file.get_uri_scheme() != "file":
+            return []
+
+        item = Nautilus.MenuItem(
+            name="NautilusPython::openwezterm_file_item",
+            label="Open in WezTerm",
+        )
+        item.connect("activate", self.menu_activate_cb, file)
+
+        return [
+            item,
+        ]
+
+    def get_background_items(
+        self,
+        current_folder: Nautilus.FileInfo,
+    ) -> List[Nautilus.MenuItem]:
+        item = Nautilus.MenuItem(
+            name="NautilusPython::openwezterm_file_item2",
+            label="Open in WezTerm",
+        )
+        item.connect("activate", self.menu_background_activate_cb, current_folder)
+
+        return [
+            item,
+        ]

@@ -18,5 +18,8 @@ esac
 
 mkdir -p ~/.local/share/nautilus-python/extensions
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
-cp $SCRIPT_DIR/nautilus-wezterm.py ~/.local/share/nautilus-python/extensions
-cp $SCRIPT_DIR/nautilus-vscode.py ~/.local/share/nautilus-python/extensions
+# ln -sf $SCRIPT_DIR/nautilus-wezterm.py ~/.local/share/nautilus-python/extensions
+ln -sf $SCRIPT_DIR/nautilus-vscode.py ~/.local/share/nautilus-python/extensions/nautilus-vscode.py
+ln -sf $SCRIPT_DIR/nautilus-kitty.py ~/.local/share/nautilus-python/extensions/nautilus-kitty.py
+
+nautilus -q

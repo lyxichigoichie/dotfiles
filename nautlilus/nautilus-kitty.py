@@ -5,26 +5,26 @@ from gi.repository import Nautilus, GObject
 from typing import List
 
 
-class OpenTerminatorExtension(GObject.GObject, Nautilus.MenuProvider):
-    def _open_terminator(self, file: Nautilus.FileInfo) -> None:
+class OpenKittyExtension(GObject.GObject, Nautilus.MenuProvider):
+    def _open_kitty(self, file: Nautilus.FileInfo) -> None:
         filename = unquote(file.get_uri()[7:])
 
         os.chdir(filename)
-        os.system("terminator .")
+        os.system("kitty .")
 
     def menu_activate_cb(
         self,
         menu: Nautilus.MenuItem,
         file: Nautilus.FileInfo,
     ) -> None:
-        self._open_terminator(file)
+        self._open_kitty(file)
 
     def menu_background_activate_cb(
         self,
         menu: Nautilus.MenuItem,
         file: Nautilus.FileInfo,
     ) -> None:
-        self._open_terminator(file)
+        self._open_kitty(file)
 
     def get_file_items(
         self,
@@ -38,8 +38,8 @@ class OpenTerminatorExtension(GObject.GObject, Nautilus.MenuProvider):
             return []
 
         item = Nautilus.MenuItem(
-            name="NautilusPython::openterminator_file_item",
-            label="Open in Terminator",
+            name="NautilusPython::openkitty_file_item",
+            label="Open in Kitty",
         )
         item.connect("activate", self.menu_activate_cb, file)
 
@@ -52,8 +52,8 @@ class OpenTerminatorExtension(GObject.GObject, Nautilus.MenuProvider):
         current_folder: Nautilus.FileInfo,
     ) -> List[Nautilus.MenuItem]:
         item = Nautilus.MenuItem(
-            name="NautilusPython::openterminator_file_item2",
-            label="Open in Terminator",
+            name="NautilusPython::openkitty_file_item2",
+            label="Open in Kitty",
         )
         item.connect("activate", self.menu_background_activate_cb, current_folder)
 
