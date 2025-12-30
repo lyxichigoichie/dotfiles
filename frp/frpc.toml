@@ -1,0 +1,16 @@
+serverAddr = "172.25.70.195"
+serverPort = 7000
+
+[[proxies]]
+name = "ssh"
+type = "tcp"
+localIP = "127.0.0.1"
+localPort = 22
+remotePort = 6000
+
+[[proxies]]
+name = "CasaOS"
+type = "tcp"
+localIP = "127.0.0.1"
+localPort = 8080
+remotePort = 6001
