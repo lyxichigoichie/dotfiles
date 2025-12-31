@@ -1,0 +1,19 @@
+# Server related settings
+address: 0.0.0.0
+port: 8558
+auth: true
+tls: false
+cert: cert.pem
+key: key.pem
+modify: true
+rules: []
+users:
+  - username: obsidian
+    password: obsidian
+    directory: /home/liyx/SSD/WebdavVault
+    permissions: RCUD
+  - username: zotero
+    password: zotero
+    directory: /home/liyx/SSD/WebdavVault
+    permissions: RCUD
+
