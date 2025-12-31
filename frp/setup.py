@@ -3,14 +3,14 @@ from pathlib import Path
 import subprocess
 
 SCRIPT_DIR = str(Path(__file__).parent.absolute())
+BIN_DIR = str(Path(__file__).parent.parent.joinpath("bin").absolute())
 
 # subprocess.run(["wget", "https://github.com/fatedier/frp/releases/download/v0.65.0/frp_0.65.0_linux_amd64.tar.gz"])
 subprocess.run(["tar", "-xzf", f"{SCRIPT_DIR}/frp_0.65.0_linux_amd64.tar.gz", "-C", f"{SCRIPT_DIR}"])
-subprocess.run(["mv", f"{SCRIPT_DIR}/frp_0.65.0_linux_amd64/frpc", f"{SCRIPT_DIR}"])
+subprocess.run(["mv", f"{SCRIPT_DIR}/frp_0.65.0_linux_amd64/frpc", f"{BIN_DIR}"])
 subprocess.run(["rm", "-rf", f"{SCRIPT_DIR}/frp_0.65.0_linux_amd64"])
 
-service = f'''
-[Unit]
+service = f'''[Unit]
 Description=Frp Client Service
 # 这一点很关键：确保网络连接建立后再启动，否则frp会报错连接失败
 After=network.target network-online.target
@@ -27,7 +27,7 @@ Restart=on-failure
 RestartSec=5s
 
 # 这里的路径必须是绝对路径！
-ExecStart={SCRIPT_DIR}/frpc -c {SCRIPT_DIR}/frpc.toml
+ExecStart={BIN_DIR}/frpc -c {SCRIPT_DIR}/frpc.toml
 
 # 如果你的 frpc 依赖工作目录（例如读取同级目录下的其他文件），可以加上这一行
 WorkingDirectory={SCRIPT_DIR}
