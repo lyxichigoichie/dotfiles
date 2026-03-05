@@ -1,4 +1,4 @@
-serverAddr = "172.25.70.195"
+serverAddr = "172.25.70.99"
 serverPort = 7000
 
 [[proxies]]
@@ -14,3 +14,10 @@ type = "tcp"
 localIP = "127.0.0.1"
 localPort = 8080
 remotePort = 6001
+
+[[proxies]]
+name = "webdav"
+type = "tcp"
+localIP = "127.0.0.1"
+localPort = 8558
+remotePort = 6002
